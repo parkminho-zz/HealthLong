@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.healthlong.hellong.model.dao.UserDao">
+
+	<!-- 이메일 중복확인  -->
+	<select id="emailCheck" parameterType="String" resultType="int">
+		SELECT COUNT(*) 
+		FROM users
+		WHERE user_email = #{email}
+	</select>
+	
+	<!-- 타입 확인  -->
+	<select id="isUserCheck" parameterType="String" resultType="int">
+		SELECT user_type 
+		FROM users
+		WHERE user_email = #{email}
+	</select>
+	
+		<!-- 이름확인  -->
+	<select id="isNameCheck" parameterType="String" resultType="String">
+		SELECT user_name
+		FROM users
+		WHERE user_email = #{email}
+	</select>
+	
+	<!-- 비밀번호 확인  -->
+	<select id="isPasswordCheck" parameterType="String" resultType="String">
+		SELECT user_password
+		FROM users
+		WHERE user_email = #{email}
+	</select>
+	
+	<!-- 폽너호확인  -->
+	<select id="isUserPhNum" parameterType="String" resultType="String">
+		SELECT user_phNum
+		FROM users
+		WHERE user_email = #{email}
+	</select>
+	
+	<!-- 끝 확인  -->
+	<select id="isEndTimeCheck" parameterType="String" resultType="int">
+		SELECT user_endTime
+		FROM users
+		WHERE user_email = #{email}
+	</select>
+	
+		<!-- 남은시간확인 확인  -->
+	<select id="isRemainTimeCheck" parameterType="String" resultType="int">
+		SELECT user_remainTime
+		FROM users
+		WHERE user_email = #{email}
+	</select>
+	
+	<!-- 시작 확인  -->
+	<select id="isStartTimeCheck" parameterType="String" resultType="java.time.LocalDateTime">
+		SELECT user_startTime
+		FROM users
+		WHERE user_email = #{email}
+	</select>
+	
+	<!-- 카카오 유저 등록  :  @@@@   2   @@@@  -->
+	<insert id="insertKakaoUser" parameterType="User" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO users (user_email, user_password, user_name, user_phNum, user_type)
+		VALUES (#{email}, #{password}, #{name}, #{phNum}, #{userType});
+	</insert>
+	
+		<!-- 유저 시간 설정-->
+	<update id="updateRemainTime" parameterType="map">
+		UPDATE users
+		SET user_remainTime = user_remainTime + #{time}
+		WHERE user_email = #{email};
+	</update>
+	
+		<!-- 유저 끝 시간 설정-->
+	<update id="updateEndTime" parameterType="String">
+		UPDATE users
+		SET user_endTime = 0
+		WHERE user_email = #{email};
+	</update>
+	
+	    <!-- 사용자 정보 업데이트  -->
+ 	<update id="updateUser" parameterType="Map">
+        UPDATE users
+        SET user_name = #{name}, user_password = #{password}
+        WHERE user_email = #{email}
+    </update>
+    
+    <!-- 카카오사용자 정보 업데이트  -->
+    <update id="updateKakaoUser" parameterType="Map">
+        UPDATE users
+        SET user_name = #{name}
+        WHERE user_email = #{email}
+    </update> 
+    
+	    <!-- 일반 유저 회원가입 -->
+    <insert id="insertUser" parameterType="User">
+		INSERT INTO users (user_email, user_password, user_name, user_phNum, user_type)
+		VALUES (#{email}, #{password}, #{name}, #{phNum}, #{userType});
+	</insert>
+	
+</mapper>

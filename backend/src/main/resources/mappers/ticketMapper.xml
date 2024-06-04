@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.healthlong.hellong.model.dao.TicketDao">
+	<!-- 사용자 결제 내역 조회 -->
+
+	<!-- 시작시간 설정 -->
+	<update id="startTime" parameterType="String">
+		UPDATE users
+		SET user_startTime = NOW(), user_endTime = 1
+		WHERE user_email = #{email};
+	</update>
+	
+		<!-- 종료 설정 -->
+	<insert id="endTime" parameterType="Ticket" >
+		INSERT INTO ticket (ticket_uid ,ticket_start, ticket_end, ticket_use)
+		VALUES ( #{ticketUid} ,#{ticketStart} , NOW() , TIMESTAMPDIFF(MINUTE, #{ticketStart}, NOW()) )
+	</insert> 
+	
+			<!-- 사용시간 확인  -->
+	<select id="isUseTimeCheck" parameterType="Map" resultType="int">
+		SELECT ticket_use
+		FROM ticket
+		WHERE ticket_uid = #{email} AND ticket_start = #{ticketStart}
+	</select> 
+	
+	<select id="searchList"  resultType="Ticket" parameterType="String" >
+		SELECT * 
+		FROM ticket	
+		WHERE ticket_uid = #{email}
+	</select>
+</mapper>
